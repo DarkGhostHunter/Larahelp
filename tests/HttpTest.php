@@ -35,13 +35,13 @@ class HttpTest extends TestCase
     {
         $fake = Http::fake();
 
-        $response = http('GET', 'https://example.com/test', 'something');
+        $response = http('GET', 'https://example.com/test', ['foo' => 'bar']);
 
         $this->assertInstanceOf(HttpResponse::class, $response);
 
         $fake->assertSent(function (HttpRequest $request) {
             return $request->method() === 'GET'
-                && $request->url() === 'https://example.com/test?something'
+                && $request->url() === 'https://example.com/test?foo=bar'
                 && $request->body() === '';
         });
 

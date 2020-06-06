@@ -23,7 +23,7 @@ if (! function_exists('http')) {
      *
      * @param  string  $verb
      * @param  string  $url
-     * @param  array|null  $data
+     * @param  array|string|null  $data
      * @return \Illuminate\Http\Client\PendingRequest|\Illuminate\Http\Client\Response
      */
     function http($verb = null, $url = null, $data = null)
