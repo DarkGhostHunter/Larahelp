@@ -1,0 +1,54 @@
+{
+    "name": "darkghosthunter/larahelp",
+    "description": "Supercharge your Laravel projects with more than 35 useful global helpers.",
+    "keywords": [
+        "darkghosthunter",
+        "helpers",
+        "laravel"
+    ],
+    "homepage": "https://github.com/darkghosthunter/larahelp",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Italo Israel Baeza Cabrera",
+            "email": "darkghosthunter@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2.15",
+        "ext-json": "*",
+        "illuminate/support": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.0",
+        "guzzlehttp/guzzle": "^6.5||^7.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DarkGhostHunter\\Larahelp\\": "src"
+        },
+        "files": [
+            "src/datetime.php",
+            "src/filesystem.php",
+            "src/helpers.php",
+            "src/http.php",
+            "src/objects.php",
+            "src/services.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
