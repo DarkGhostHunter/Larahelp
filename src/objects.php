@@ -11,26 +11,21 @@ if (! function_exists('arguments_of')) {
      */
     function arguments_of($callback, $method = null)
     {
-        if ($callback instanceof Closure) {
-            $reflection = new ReflectionFunction($callback);
-        }
-        elseif (is_array($callback)) {
-            $reflection = new ReflectionMethod($callback[0], $callback[1]);
-        }
-        elseif ($method) {
+        if ($method) {
             $reflection = new ReflectionMethod($callback, $method);
-        }
-        elseif (is_string($callback)) {
+        } elseif (is_array($callback)) {
+            $reflection = new ReflectionMethod($callback[0], $callback[1]);
+        } elseif (is_string($callback)) {
             if (strpos($callback, '::') !== false) {
                 $callback = explode('::', $callback, 2);
-            }
-            else {
+            } else {
                 $callback = explode('@', $callback, 2);
             }
 
             $reflection = new ReflectionMethod($callback[0], $callback[1]);
-        }
-        else {
+        } elseif ($callback instanceof Closure) {
+            $reflection = new ReflectionFunction($callback);
+        } else {
             $reflection = new ReflectionMethod($callback, '__invoke');
         }
 
