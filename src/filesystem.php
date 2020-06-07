@@ -4,7 +4,7 @@ use Illuminate\Support\Str;
 
 if (! function_exists('base_path_of')) {
     /**
-     * Return the relative path of a class from the project root path.
+     * Return the path of a class from the project root path.
      *
      * @param  string|object  $object
      * @return string
@@ -20,7 +20,7 @@ if (! function_exists('base_path_of')) {
 
 if (! function_exists('class_defined_at')) {
     /**
-     * Returns where the file path where the object was defined.
+     * Returns where the file path where the class was defined.
      *
      * @param  string|object  $object
      * @param  bool  $withLine

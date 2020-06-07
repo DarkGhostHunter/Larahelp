@@ -83,7 +83,7 @@ if (! function_exists('until_now')) {
 
 if (! function_exists('yesterday')) {
     /**
-     * Create a new Carbon instance for the day before today.
+     * Create a new Carbon instance for yesterday.
      *
      * @param  \DateTimeZone|string|null  $tz
      * @return \Illuminate\Support\Carbon

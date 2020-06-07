@@ -19,7 +19,7 @@ if (! function_exists('created')) {
 
 if (! function_exists('http')) {
     /**
-     * Sends an HTTP Request. A pending Request is returned if no verb is issued.
+     * Returns a Pending Request, or sends a Request and returns a Response.
      *
      * @param  string  $verb
      * @param  string  $url
@@ -49,7 +49,7 @@ if (! function_exists('ok')) {
 
 if (! function_exists('routed')) {
     /**
-     * Returns the current route of the HTTP Request, or null when none.
+     * Returns the current route of the HTTP Request, or `null` when none.
      *
      * @return \Illuminate\Routing\Route|null
      */

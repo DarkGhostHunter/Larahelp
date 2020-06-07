@@ -46,7 +46,7 @@ if (! function_exists('collect_times')) {
 
 if (! function_exists('data_transform')) {
     /**
-     * Transform an item of an array using a callable.
+     * Transform an item of an array or object using a callable.
      *
      * @param  mixed  $target
      * @param  string|array  $key
@@ -169,7 +169,7 @@ if (! function_exists('when')) {
 
 if (! function_exists('none_of')) {
     /**
-     * Checks if the none of the options compared or called returns true.
+     * Checks if none of the options compared or called returns true.
      *
      * @param  mixed  $subject
      * @param  array|iterable  $options
@@ -217,7 +217,7 @@ if (! function_exists('random_unique')) {
 
 if (! function_exists('swap_vars')) {
     /**
-     * Swap two variables values, and returns the second argument value.
+     * Swap two variables values, and returns the second variable original value.
      *
      * @param  mixed  $swap
      * @param  mixed  $swapped
@@ -262,7 +262,7 @@ if (! function_exists('which_of')) {
 
 if (! function_exists('while_sleep')) {
     /**
-     * Executes an operation while sleeping milliseconds between multiple executions.
+     * Executes an operation while sleeping between multiple executions.
      *
      * @param  int  $times
      * @param  int  $sleep
