@@ -1,9 +1,10 @@
 ![Regine Tholen - Unsplash (UL) #ojGvj7CE5OQ](https://images.unsplash.com/photo-1574246915327-8cf501d94757?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/darkghosthunter/larahelp.svg?style=flat-square)](https://packagist.org/packages/darkghosthunter/larahelp)
-[![Build Status](https://img.shields.io/travis/darkghosthunter/larahelp/master.svg?style=flat-square)](https://travis-ci.org/darkghosthunter/larahelp)
-[![Quality Score](https://img.shields.io/scrutinizer/g/darkghosthunter/larahelp.svg?style=flat-square)](https://scrutinizer-ci.com/g/darkghosthunter/larahelp)
-[![Total Downloads](https://img.shields.io/packagist/dt/darkghosthunter/larahelp.svg?style=flat-square)](https://packagist.org/packages/darkghosthunter/larahelp)
+[![Latest Stable Version](https://poser.pugx.org/darkghosthunter/larahelp/v/stable)](https://packagist.org/packages/darkghosthunter/larahelp) [![License](https://poser.pugx.org/darkghosthunter/larahelp/license)](https://packagist.org/packages/darkghosthunter/larahelp)
+![](https://img.shields.io/packagist/php-v/darkghosthunter/larahelp.svg)
+ ![](https://github.com/DarkGhostHunter/Larahelp/workflows/PHP%20Composer/badge.svg)
+ [![Coverage Status](https://coveralls.io/repos/github/DarkGhostHunter/Larahelp/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/Larahelp?branch=master)
+
 
 # Larahelp
 
