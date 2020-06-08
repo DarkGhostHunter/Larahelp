@@ -4,7 +4,7 @@ use Illuminate\Contracts\Console\Kernel;
 
 if (! function_exists('artisan')) {
     /**
-     * Calls an Artisan command, or return the Artisan console instance.
+     * Returns the Artisan console instance, or calls an Artisan command.
      *
      * @param  string  $command
      * @param  array  $parameters
@@ -21,7 +21,7 @@ if (! function_exists('artisan')) {
 
 if (! function_exists('hasher')) {
     /**
-     * Hashes a value. If no value is given, the Hasher is returned.
+     * Returns the Hasher instance, or hashes a value.
      *
      * @param  string|null  $value
      * @param  array  $options
@@ -37,7 +37,7 @@ if (! function_exists('hasher')) {
 
 if (! function_exists('user')) {
     /**
-     * Returns the current user authenticated, or null if is a guest.
+     * Returns the current user authenticated, or `null` if is a guest.
      *
      * @param  string|null  $guard
      * @return null|\Illuminate\Contracts\Auth\Authenticatable
