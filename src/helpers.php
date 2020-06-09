@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Pipeline\Pipeline;
@@ -33,7 +32,7 @@ if (! function_exists('collect_lazy')) {
 
 if (! function_exists('collect_times')) {
     /**
-     * Create a new collection by invoking the callback a given amount of times.
+     * Create a new collection by invoking a callback a given amount of times.
      *
      * @param  callable  $callback
      * @param  int|null  $times
@@ -47,7 +46,7 @@ if (! function_exists('collect_times')) {
 
 if (! function_exists('data_transform')) {
     /**
-     * Transform an item of an array or object using a callable.
+     * Transform an item of an array or object using a callback.
      *
      * @param  mixed  $target
      * @param  string|array  $key
@@ -61,7 +60,7 @@ if (! function_exists('data_transform')) {
 
 if (! function_exists('enclose')) {
     /**
-     * Wraps a value into a Closure. It accepts another callable to handle the value.
+     * Wraps a value into a Closure. It accepts another callback to handle the value.
      *
      * @param  mixed  $value
      * @return \Closure
@@ -187,6 +186,8 @@ if (! function_exists('random_bool')) {
     /**
      * Returns a random boolean value.
      *
+     * If the seed is zero, it will always return `false`.
+     *
      * If the seed is negative, odds will favor `false`.
      *
      * @param  int  $seed
@@ -194,7 +195,11 @@ if (! function_exists('random_bool')) {
      */
     function random_bool($seed = 1)
     {
-        return (bool) random_int(0, $seed);
+        if ($seed < 0) {
+            return (bool)random_int($seed, 1);
+        }
+
+        return (bool)random_int(0, $seed);
     }
 }
 
@@ -249,6 +254,20 @@ if (! function_exists('swap_vars')) {
         unset($temp);
 
         return $swap;
+    }
+}
+
+if (! function_exists('list_from')) {
+    /**
+     * Skips the first values of an array, so these can be listed into variables.
+     *
+     * @param  array  $items
+     * @param  int  $offset
+     * @return array
+     */
+    function list_from($items, $offset = 1)
+    {
+        return array_slice(array_values($items), $offset);
     }
 }
 

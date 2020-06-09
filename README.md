@@ -25,13 +25,15 @@ This package includes helpful global helpers for your project, separated into di
 ### General purpose
 
 * `collect_lazy`: Creates a new Lazy Collection.
-* `collect_times`: Create a new collection by invoking the callback a given amount of times.
-* `data_transform`: Transform an item of an array or object using a callable.
-* `enclose`: Wraps a value into a Closure. It accepts another callable to handle the value.
+* `collect_times`: Create a new collection by invoking a callback a given amount of times.
+* `data_transform`: Transform an item of an array or object using a callback.
+* `enclose`: Wraps a value into a Closure. It accepts another callback to handle the value.
 * `fluent`: Creates a new Fluent instance.
 * `pipeline`: Sends an object through a pipeline.
+* `random_bool`: Returns a random boolean value.
 * `random_unique`: Returns a unique amount of results from a random generator executed a number of times.
-* `none_of`: Checks if none of the options compared or called returns true.
+* `list_from`: Skips the first values of an array, so these can be listed into variables.
+* `none_of`: Checks if none of the options compared or called to a subject returns true.
 * `throttle`: Throttles a given callback by a key.
 * `unless`: Returns a value when a condition is falsy.
 * `swap_vars`: Swap two variables values, and returns the second variable original value.
@@ -51,8 +53,8 @@ This package includes helpful global helpers for your project, separated into di
 
 * `base_path_of`: Return the path of a class from the project root path.
 * `class_defined_at`: Returns where the file path where the class was defined.
-* `dot_path`: Returns a relative path in dot notation.
-* `undot_path`:Returns a relative path from a dot notation string.
+* `dot_path`: Transform a relative path to dot notation.
+* `undot_path`: Transforms a path from dot notation to a relative path.
 
 ### HTTP
 
@@ -64,7 +66,7 @@ This package includes helpful global helpers for your project, separated into di
 
 ### Objects
 
-* `arguments_of`: Returns a collection of arguments received by the given callable.
+* `arguments_of`: Returns a collection of arguments received by the given callback.
 * `call_existing`: Calls a dynamic method or macro if it exists in the object instance.
 * `replicate`: Replicates an object.
 * `has_trait`: Checks recursively if the object is using a trait.
