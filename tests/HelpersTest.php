@@ -276,7 +276,6 @@ class HelpersTest extends TestCase
 
         $this->assertLessThan(10, $results->filter()->count());
         $this->assertGreaterThan(0, $results->reject()->count());
-        $this->assertNotSame($results->filter()->count(), $results->reject()->count());
 
         $results = collect_times(10, function () {
             return random_bool(-1);
@@ -288,7 +287,6 @@ class HelpersTest extends TestCase
 
         $this->assertLessThan(10, $results->filter()->count());
         $this->assertGreaterThan(0, $results->reject()->count());
-        $this->assertNotSame($results->filter()->count(), $results->reject()->count());
     }
 
     public function test_random_unique()
