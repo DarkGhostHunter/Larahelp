@@ -54,7 +54,7 @@ if (! function_exists('dot_path')) {
 
 if (! function_exists('undot_path')) {
     /**
-     * Returns a relative path from a dot notation string.
+     * Transforms a path from dot notation to a relative path.
      *
      * @param  string  $path
      * @return string
