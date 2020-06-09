@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Pipeline\Pipeline;
@@ -169,7 +170,7 @@ if (! function_exists('when')) {
 
 if (! function_exists('none_of')) {
     /**
-     * Checks if none of the options compared or called returns true.
+     * Checks if none of the options compared or called to a subject returns true.
      *
      * @param  mixed  $subject
      * @param  array|iterable  $options
@@ -182,12 +183,28 @@ if (! function_exists('none_of')) {
     }
 }
 
+if (! function_exists('random_bool')) {
+    /**
+     * Returns a random boolean value.
+     *
+     * If the seed is negative, odds will favor `false`.
+     *
+     * @param  int  $seed
+     * @return bool
+     */
+    function random_bool($seed = 1)
+    {
+        return (bool) random_int(0, $seed);
+    }
+}
+
 if (! function_exists('random_unique')) {
     /**
      * Returns a unique amount of results from a random generator executed a number of times.
      *
-     * If $overflow is true, the loop will end only when the results match the number of executions.
-     * This can make endless loops, so use with caution around callbacks without enough entropy.
+     * If `$overflow` is true, the loop will end only when the results match the number of
+     * executions, which may create endless loops. Use with caution around callbacks that
+     * don't have enough entropy to return unique results, like 10 times on `rand(1,2)`.
      *
      * @param  int  $times
      * @param  callable  $callback
@@ -239,6 +256,8 @@ if (! function_exists('which_of')) {
     /**
      * Returns the first option which comparison or callback returns true.
      *
+     * If no results returns truthy, `false` will be returned.
+     *
      * @param  mixed  $subject
      * @param  array|iterable  $options
      * @param  callable|null  $callback
@@ -262,10 +281,12 @@ if (! function_exists('which_of')) {
 
 if (! function_exists('while_sleep')) {
     /**
-     * Executes an operation while sleeping between multiple executions.
+     * Runs a callback while sleeping between multiple executions.
+     *
+     * It returns a collection of each callback result.
      *
      * @param  int  $times
-     * @param  int  $sleep
+     * @param  int  $sleep  Milliseconds to sleep. 1000 equals to 1 second.
      * @param  callable  $callback
      * @return \Illuminate\Support\Collection
      */
@@ -273,10 +294,12 @@ if (! function_exists('while_sleep')) {
     {
         $sleep *= 1000;
 
-        return collect_times($times, static function ($iteration) use ($callback, $sleep) {
+        return collect_times($times, static function ($iteration) use ($callback, $sleep, $times) {
             $result = $callback($iteration);
 
-            usleep($sleep);
+            if ($iteration < $times) {
+                usleep($sleep);
+            }
 
             return $result;
         });
