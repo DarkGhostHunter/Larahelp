@@ -32,7 +32,7 @@ if (! function_exists('collect_lazy')) {
 
 if (! function_exists('collect_times')) {
     /**
-     * Create a new collection by invoking the callback a given amount of times.
+     * Create a new collection by invoking a callback a given amount of times.
      *
      * @param  callable  $callback
      * @param  int|null  $times
@@ -46,7 +46,7 @@ if (! function_exists('collect_times')) {
 
 if (! function_exists('data_transform')) {
     /**
-     * Transform an item of an array or object using a callable.
+     * Transform an item of an array or object using a callback.
      *
      * @param  mixed  $target
      * @param  string|array  $key
@@ -60,7 +60,7 @@ if (! function_exists('data_transform')) {
 
 if (! function_exists('enclose')) {
     /**
-     * Wraps a value into a Closure. It accepts another callable to handle the value.
+     * Wraps a value into a Closure. It accepts another callback to handle the value.
      *
      * @param  mixed  $value
      * @return \Closure
@@ -169,7 +169,7 @@ if (! function_exists('when')) {
 
 if (! function_exists('none_of')) {
     /**
-     * Checks if none of the options compared or called returns true.
+     * Checks if none of the options compared or called to a subject returns true.
      *
      * @param  mixed  $subject
      * @param  array|iterable  $options
@@ -182,12 +182,34 @@ if (! function_exists('none_of')) {
     }
 }
 
+if (! function_exists('random_bool')) {
+    /**
+     * Returns a random boolean value.
+     *
+     * If the seed is zero, it will always return `false`.
+     *
+     * If the seed is negative, odds will favor `false`.
+     *
+     * @param  int  $seed
+     * @return bool
+     */
+    function random_bool($seed = 1)
+    {
+        if ($seed < 0) {
+            return (bool)random_int($seed, 1);
+        }
+
+        return (bool)random_int(0, $seed);
+    }
+}
+
 if (! function_exists('random_unique')) {
     /**
      * Returns a unique amount of results from a random generator executed a number of times.
      *
-     * If $overflow is true, the loop will end only when the results match the number of executions.
-     * This can make endless loops, so use with caution around callbacks without enough entropy.
+     * If `$overflow` is true, the loop will end only when the results match the number of
+     * executions, which may create endless loops. Use with caution around callbacks that
+     * don't have enough entropy to return unique results, like 10 times on `rand(1,2)`.
      *
      * @param  int  $times
      * @param  callable  $callback
@@ -235,9 +257,25 @@ if (! function_exists('swap_vars')) {
     }
 }
 
+if (! function_exists('list_from')) {
+    /**
+     * Skips the first values of an array, so these can be listed into variables.
+     *
+     * @param  array  $items
+     * @param  int  $offset
+     * @return array
+     */
+    function list_from($items, $offset = 1)
+    {
+        return array_slice(array_values($items), $offset);
+    }
+}
+
 if (! function_exists('which_of')) {
     /**
      * Returns the first option which comparison or callback returns true.
+     *
+     * If no results returns truthy, `false` will be returned.
      *
      * @param  mixed  $subject
      * @param  array|iterable  $options
@@ -262,10 +300,12 @@ if (! function_exists('which_of')) {
 
 if (! function_exists('while_sleep')) {
     /**
-     * Executes an operation while sleeping between multiple executions.
+     * Runs a callback while sleeping between multiple executions.
+     *
+     * It returns a collection of each callback result.
      *
      * @param  int  $times
-     * @param  int  $sleep
+     * @param  int  $sleep  Milliseconds to sleep. 1000 equals to 1 second.
      * @param  callable  $callback
      * @return \Illuminate\Support\Collection
      */
@@ -273,10 +313,12 @@ if (! function_exists('while_sleep')) {
     {
         $sleep *= 1000;
 
-        return collect_times($times, static function ($iteration) use ($callback, $sleep) {
+        return collect_times($times, static function ($iteration) use ($callback, $sleep, $times) {
             $result = $callback($iteration);
 
-            usleep($sleep);
+            if ($iteration < $times) {
+                usleep($sleep);
+            }
 
             return $result;
         });

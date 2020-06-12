@@ -262,6 +262,33 @@ class HelpersTest extends TestCase
         }));
     }
 
+    public function test_random_bool()
+    {
+        $this->assertFalse(random_bool(0));
+
+        $results = collect_times(10, function () {
+            return random_bool(1);
+        });
+
+        $results->each(function ($item) {
+            $this->assertIsBool($item);
+        });
+
+        $this->assertLessThan(10, $results->filter()->count());
+        $this->assertGreaterThan(0, $results->reject()->count());
+
+        $results = collect_times(10, function () {
+            return random_bool(-1);
+        });
+
+        $results->each(function ($item) {
+            $this->assertIsBool($item);
+        });
+
+        $this->assertLessThan(10, $results->filter()->count());
+        $this->assertGreaterThan(0, $results->reject()->count());
+    }
+
     public function test_random_unique()
     {
         $random_unique = random_unique(10, function () {
@@ -311,19 +338,6 @@ class HelpersTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertCount(4, $collection);
-        $this->assertSame(4, $end - $start);
-    }
-
-    public function test_while_sleep_retry()
-    {
-        $start = time();
-        $collection = while_sleep(4, 1000, function () {
-            return microtime(false);
-        });
-        $end = time();
-
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertCount(4, $collection);
-        $this->assertSame(4, $end - $start);
+        $this->assertSame(3, $end - $start);
     }
 }
