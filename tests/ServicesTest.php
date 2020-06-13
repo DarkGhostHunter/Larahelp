@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Foundation\Auth\User;
 use Orchestra\Testbench\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
@@ -20,6 +21,11 @@ class ServicesTest extends TestCase
         });
 
         $this->assertSame(0, artisan('foo'));
+    }
+
+    public function test_rate_limiter()
+    {
+        $this->assertInstanceOf(RateLimiter::class, rate_limiter());
     }
 
     public function test_hasher()

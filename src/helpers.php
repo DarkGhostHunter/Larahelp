@@ -105,17 +105,29 @@ if (! function_exists('pipeline')) {
 
 if (! function_exists('throttle')) {
     /**
-     * Throttles a given callback by a key. Returns true is the callable is executed.
+     * Returns the Rate Limiter or throttles a given callback by a key.
+     *
+     * If only a key is given, it will return when it will be available.
+     *
+     * It will return `true` if the callback is executed, and `false` when not.
      *
      * @param  string  $key
      * @param  callable  $callback
      * @param  int  $tries
      * @param  int  $decayMinutes
-     * @return mixed|bool
+     * @return \Illuminate\Cache\RateLimiter|\Illuminate\Support\Carbon|bool
      */
-    function throttle($key, callable $callback, $tries = 60, $decayMinutes = 1)
+    function throttle($key = null, callable $callback = null, $tries = 60, $decayMinutes = 1)
     {
-        $limiter = app(RateLimiter::class);
+        $limiter = rate_limiter();
+
+        if (0 === $args = func_num_args()) {
+            return $limiter;
+        }
+
+        if ($args === 1) {
+            return now()->addSeconds($limiter->availableIn($key));
+        }
 
         if (! $limiter->tooManyAttempts($key, $tries)) {
             $callback();
