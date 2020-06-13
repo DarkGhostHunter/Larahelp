@@ -3,10 +3,13 @@
 namespace Tests;
 
 use Closure;
+use DateTimeInterface;
 use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\LazyCollection;
 
 class HelpersTest extends TestCase
@@ -168,6 +171,8 @@ class HelpersTest extends TestCase
 
     public function test_throttle()
     {
+        $this->assertInstanceOf(RateLimiter::class, throttle());
+
         $randomFunction = function () {
             return Str::random();
         };
@@ -183,6 +188,13 @@ class HelpersTest extends TestCase
         $this->assertTrue($second);
         $this->assertFalse(throttle('quz', $randomFunction, 1, 60));
         $this->assertTrue(throttle('qux', $randomFunction, 1, 60));
+
+        Date::setTestNow($now = Date::create(2020, 01, 04, 16, 30));
+
+        throttle('quuz', $randomFunction, 1, 1);
+
+        $this->assertInstanceOf(DateTimeInterface::class, $carbon = throttle('quuz'));
+        $this->assertSame(60, throttle('quuz')->diffInSeconds());
     }
 
     public function test_unless()

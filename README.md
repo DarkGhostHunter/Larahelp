@@ -34,7 +34,7 @@ This package includes helpful global helpers for your project, separated into di
 * `random_unique`: Returns a unique amount of results from a random generator executed a number of times.
 * `list_from`: Skips the first values of an array, so these can be listed into variables.
 * `none_of`: Checks if none of the options compared or called to a subject returns true.
-* `throttle`: Throttles a given callback by a key.
+* `throttle`: Returns the Rate Limiter or throttles a given callback by a key.
 * `unless`: Returns a value when a condition is falsy.
 * `swap_vars`: Swap two variables values, and returns the second variable original value.
 * `when`: Returns a value when a condition is truthy.
@@ -79,6 +79,7 @@ This package includes helpful global helpers for your project, separated into di
 
 * `artisan`: Returns the Artisan console instance, or calls an Artisan command.
 * `hasher`: Returns the Hasher instance, or hashes a value.
+* `rate_limiter`: Return a new the Rate Limiter instance.
 * `user`: Returns the current user authenticated, or `null` if is a guest.
 
 > This package is focused on the backend. If you want views helpers, I recommend you to use [custom Blade directives](https://laravel.com/docs/blade#extending-blade) instead.

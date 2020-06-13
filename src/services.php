@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Contracts\Console\Kernel;
 
 if (! function_exists('artisan')) {
@@ -32,6 +33,18 @@ if (! function_exists('hasher')) {
         $hasher = app('hash');
 
         return $value ? $hasher->make($value, $options) : $hasher;
+    }
+}
+
+if (!function_exists('rate_limiter')) {
+    /**
+     * Return a new the Rate Limiter instance.
+     *
+     * @return \Illuminate\Cache\RateLimiter
+     */
+    function rate_limiter()
+    {
+        return app(RateLimiter::class);
     }
 }
 
