@@ -52,14 +52,13 @@ This package includes helpful global helpers for your project, separated into di
 ### Filesystem
 
 * `base_path_of`: Return the path of a class from the project root path.
-* `class_defined_at`: Returns where the file path where the class was defined.
+* `class_defined_at`: Returns the file path where the class was defined.
 * `dot_path`: Transform a relative path to dot notation.
 * `undot_path`: Transforms a path from dot notation to a relative path.
 
 ### HTTP
 
 * `created`: Return an HTTP 201 response (OK, Created).
-* `http`: Returns a Pending Request, or sends a Request and returns a Response.
 * `ok`: Returns an HTTP 204 response (OK, No Content).
 * `routed`: Returns the current route of the HTTP Request, or `null` when none.
 * `routed_is`: Determine whether the current route's name matches the given patterns.
@@ -79,6 +78,7 @@ This package includes helpful global helpers for your project, separated into di
 
 * `artisan`: Returns the Artisan console instance, or calls an Artisan command.
 * `hasher`: Returns the Hasher instance, or hashes a value.
+* `http`: Returns a Pending Request, or sends a Request and returns a Response.
 * `rate_limiter`: Return a new the Rate Limiter instance.
 * `user`: Returns the current user authenticated, or `null` if is a guest.
 

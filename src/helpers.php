@@ -67,6 +67,10 @@ if (! function_exists('enclose')) {
      */
     function enclose($value)
     {
+        if ($value instanceof Closure) {
+            return $value;
+        }
+
         return static function (callable $callable = null) use ($value) {
             return $callable ? $callable($value) : $value;
         };

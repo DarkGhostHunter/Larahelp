@@ -17,23 +17,6 @@ if (! function_exists('created')) {
     }
 }
 
-if (! function_exists('http')) {
-    /**
-     * Returns a Pending Request, or sends a Request and returns a Response.
-     *
-     * @param  string  $verb
-     * @param  string  $url
-     * @param  array|string|null  $data
-     * @return \Illuminate\Http\Client\PendingRequest|\Illuminate\Http\Client\Response
-     */
-    function http($verb = null, $url = null, $data = null)
-    {
-        $request = Http::asJson();
-
-        return $verb ? $request->{strtolower($verb)}($url, $data) : $request;
-    }
-}
-
 if (! function_exists('ok')) {
     /**
      * Returns an HTTP 204 response (OK, No Content).
