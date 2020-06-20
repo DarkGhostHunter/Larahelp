@@ -125,6 +125,12 @@ class HelpersTest extends TestCase
         $this->assertSame('foo.bar', $enclose(function ($value) {
             return "$value.bar";
         }));
+
+        $enclose = enclose ($closure = function ($something) {
+            return $something;
+        });
+
+        $this->assertSame($enclose, $closure);
     }
 
     public function test_fluent()

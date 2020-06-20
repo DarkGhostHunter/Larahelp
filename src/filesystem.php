@@ -20,7 +20,7 @@ if (! function_exists('base_path_of')) {
 
 if (! function_exists('class_defined_at')) {
     /**
-     * Returns where the file path where the class was defined.
+     * Returns the file path where the class was defined.
      *
      * @param  string|object  $object
      * @param  bool  $withLine
