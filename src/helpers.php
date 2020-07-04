@@ -1,10 +1,25 @@
 <?php
 
 use Illuminate\Support\Fluent;
-use Illuminate\Cache\RateLimiter;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
+
+if (! function_exists('callable_with')) {
+    /**
+     * Returns a callable that calls another callable with parameters.
+     *
+     * @param  callable  $callable
+     * @param  array  $parameters
+     * @return \Closure
+     */
+    function callable_with($callable, ...$parameters)
+    {
+        return static function () use ($callable, $parameters) {
+            return $callable(...$parameters);
+        };
+    }
+}
 
 if (! function_exists('collect_lazy')) {
     /**
@@ -27,6 +42,22 @@ if (! function_exists('collect_lazy')) {
         }
 
         return new LazyCollection($source);
+    }
+}
+
+if (! function_exists('collect_map')) {
+    /**
+     * Creates a new collection after passing each item through a callback.
+     *
+     * @param  mixed  $items
+     * @param  callable  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    function collect_map($items, $callback)
+    {
+        $keys = array_keys($items);
+
+        return collect(array_combine($keys, array_map($callback, $items, $keys)));
     }
 }
 
@@ -230,7 +261,7 @@ if (! function_exists('random_unique')) {
      * @param  int  $times
      * @param  callable  $callback
      * @param  bool  $overflow
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|mixed[]
      */
     function random_unique($times, $callback, $overflow = false)
     {
@@ -275,13 +306,13 @@ if (! function_exists('swap_vars')) {
 
 if (! function_exists('list_from')) {
     /**
-     * Skips the first values of an array, so these can be listed into variables.
+     * Returns the values of the array, so these can be listed into variables.
      *
      * @param  array  $items
      * @param  int  $offset
      * @return array
      */
-    function list_from($items, $offset = 1)
+    function list_from($items, $offset = 0)
     {
         return array_slice(array_values($items), $offset);
     }
