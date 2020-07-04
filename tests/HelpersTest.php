@@ -14,12 +14,25 @@ use Illuminate\Support\LazyCollection;
 
 class HelpersTest extends TestCase
 {
+    public function test_callable_with()
+    {
+        $runable = static function ($foo) {
+            return $foo;
+        };
+
+        $callable = callable_with($runable, 'foo');
+
+        $this->assertInstanceOf(Closure::class, $callable);
+
+        $this->assertSame('foo', $callable());
+    }
+
     public function test_collect_lazy()
     {
         $lazy = collect_lazy(function () {
             $array = ['foo', 'bar', 'quz', 'qux'];
 
-            reset ($array);
+            reset($array);
 
             while (current($array) !== false) {
                 yield current($array);
@@ -68,6 +81,40 @@ class HelpersTest extends TestCase
         });
     }
 
+    public function test_collect_map()
+    {
+        $items = [1, 2, 3, 4, 5];
+
+        $collection = collect_map($items, function ($item, $key) {
+            return [
+                'item' => $item * 4,
+                'key'  => $key * 2,
+            ];
+        });
+
+        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertCount(5, $collection);
+
+        $this->assertSame([
+            [
+                'item' => 4,
+                'key'  => 0,
+            ], [
+                'item' => 8,
+                'key'  => 2,
+            ], [
+                'item' => 12,
+                'key'  => 4,
+            ], [
+                'item' => 16,
+                'key'  => 6,
+            ], [
+                'item' => 20,
+                'key'  => 8,
+            ],
+        ], $collection->all());
+    }
+
     public function test_collect_times()
     {
         $collection = collect_times(10);
@@ -80,6 +127,7 @@ class HelpersTest extends TestCase
 
         $collection = collect_times(10, function () use ($random) {
             $random->push($rand = Str::random(5));
+
             return $rand;
         });
 
@@ -97,9 +145,9 @@ class HelpersTest extends TestCase
         $array = [
             'foo' => [
                 'bar', 'quz' => [
-                    'qux' => 'quuz'
-                ]
-            ]
+                    'qux' => 'quuz',
+                ],
+            ],
         ];
 
         data_transform($array, 'foo.quz.qux', function ($value) {
@@ -126,7 +174,7 @@ class HelpersTest extends TestCase
             return "$value.bar";
         }));
 
-        $enclose = enclose ($closure = function ($something) {
+        $enclose = enclose($closure = function ($something) {
             return $something;
         });
 
@@ -143,11 +191,11 @@ class HelpersTest extends TestCase
 
     public function test_pipeline()
     {
-        $barToQuz = new class
-        {
+        $barToQuz = new class {
             public function handle($bar, $next)
             {
                 $bar = $bar === 'bar' ? 'quz' : $bar;
+
                 return $next($bar);
             }
         };
@@ -155,9 +203,10 @@ class HelpersTest extends TestCase
         $pipe = pipeline('foo', [
             function ($foo, $next) {
                 $foo = $foo === 'foo' ? 'bar' : $foo;
+
                 return $next($foo);
             },
-            $barToQuz
+            $barToQuz,
         ]);
 
         $this->assertSame('quz', $pipe);
@@ -165,9 +214,10 @@ class HelpersTest extends TestCase
         $pipe = pipeline('foo', [
             function ($foo, $next) {
                 $foo = $foo === 'foo' ? 'bar' : $foo;
+
                 return $next($foo);
             },
-            $barToQuz
+            $barToQuz,
         ], function ($result) {
             return $result === 'quz' ? 'qux' : $result;
         });
@@ -330,6 +380,22 @@ class HelpersTest extends TestCase
         $this->assertSame('bar', swap_vars($foo, $bar));
         $this->assertSame('bar', $foo);
         $this->assertSame('foo', $bar);
+    }
+
+    public function test_list_from()
+    {
+        $list = ['foo' => 'bar', 'quz' => 'qux', 'quuz' => 'quux'];
+
+        [$foo, $quz, $quuz] = list_from($list);
+
+        $this->assertSame('bar', $foo);
+        $this->assertSame('qux', $quz);
+        $this->assertSame('quux', $quuz);
+
+        [$fox, $dog] = list_from($list, 1);
+
+        $this->assertSame('qux', $fox);
+        $this->assertSame('quux', $dog);
     }
 
     public function test_which_of()

@@ -24,15 +24,17 @@ This package includes helpful global helpers for your project, separated into di
 
 ### General purpose
 
+* `callable_with`: Returns a callable that calls another callable with parameters.
 * `collect_lazy`: Creates a new Lazy Collection.
 * `collect_times`: Create a new collection by invoking a callback a given amount of times.
+* `collect_map`: Creates a new collection after passing each item through a callback.
 * `data_transform`: Transform an item of an array or object using a callback.
 * `enclose`: Wraps a value into a Closure. It accepts another callback to handle the value.
 * `fluent`: Creates a new Fluent instance.
 * `pipeline`: Sends an object through a pipeline.
 * `random_bool`: Returns a random boolean value.
 * `random_unique`: Returns a unique amount of results from a random generator executed a number of times.
-* `list_from`: Skips the first values of an array, so these can be listed into variables.
+* `list_from`: Returns the values of the array, so these can be listed into variables.
 * `none_of`: Checks if none of the options compared or called to a subject returns true.
 * `throttle`: Returns the Rate Limiter or throttles a given callback by a key.
 * `unless`: Returns a value when a condition is falsy.
