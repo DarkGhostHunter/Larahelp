@@ -46,7 +46,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --coverage-clover build/logs/clover.xml",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
     "config": {

@@ -2,10 +2,10 @@
 
 namespace Tests;
 
-use Carbon\CarbonPeriod;
 use Carbon\CarbonInterval;
-use Orchestra\Testbench\TestCase;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Date;
+use Orchestra\Testbench\TestCase;
 
 class DatetimeTest extends TestCase
 {
@@ -29,7 +29,7 @@ class DatetimeTest extends TestCase
 
         $this->assertInstanceOf(CarbonInterval::class, $today);
         $this->assertSame(1, $today->invert);
-        $this->assertSame(9, $today->roundDays()->totalDays);
+        $this->assertSame(-9, $today->roundDays()->totalDays);
     }
 
     public function test_period()
