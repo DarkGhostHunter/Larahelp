@@ -24,7 +24,7 @@
     "require-dev": {
         "orchestra/testbench": "^5.0||^6.0",
         "guzzlehttp/guzzle": "^6.5||^7.0",
-        "phpunit/phpunit": "^8.5||^9.0",
+        "phpunit/phpunit": "^9.3",
         "mockery/mockery": "^1.4",
         "nesbot/carbon": "^2.41"
     },
