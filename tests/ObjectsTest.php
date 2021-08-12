@@ -2,215 +2,100 @@
 
 namespace Tests;
 
-use ReflectionProperty;
-use ReflectionParameter;
-use Illuminate\Support\Fluent;
-use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Orchestra\Testbench\TestCase;
+use ReflectionMethod;
+use ReflectionProperty;
 
 class ObjectsTest extends TestCase
 {
-    public function test_arguments_of()
+    public function test_app_call(): void
     {
-        $closure = function (int $integer) {
-        };
+        $this->app->instance('App\Test', $object = new class {
+            public function test(string $string = null): string {
+                return $string ?? 'foo';
+            }
+        });
 
-        $arguments = arguments_of($closure);
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(1, $arguments);
-
-        $arguments = arguments_of([TestArgumentsOfClass::class, 'test']);
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of([new TestArgumentsOfClass, 'test']);
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of(TestArgumentsOfClass::class, 'test');
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of(new TestArgumentsOfClass, 'test');
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of('Tests\TestArgumentsOfClass::test');
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of('Tests\TestArgumentsOfClass@test');
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(2, $arguments);
-
-        $arguments = arguments_of(new TestArgumentsOfClass);
-
-        $this->assertInstanceOf(Collection::class, $arguments);
-        $this->assertInstanceOf(ReflectionParameter::class, $arguments->first());
-        $this->assertCount(3, $arguments);
+        static::assertEquals('foo', app_call('App\Test@test'));
+        static::assertEquals('bar', app_call('App\Test@test', ['string' => 'bar']));
+        static::assertEquals('bar', app_call([$object, 'test'], ['string' => 'bar']));
+        static::assertEquals('quz', app_call(static fn($string): string => $string, ['string' => 'quz']));
     }
 
-    public function test_call_existing()
+    public function test_call_existing(): void
     {
-        $this->assertSame('bar', call_existing(new TestArgumentsOfClass, 'testExisting', 'bar'));
-        $this->assertNull(call_existing(new TestArgumentsOfClass, 'bar', 'bar'));
+        static::assertSame('bar', call_existing(new TestArgumentsOfClass, 'testExisting', 'bar'));
+        static::assertFalse(call_existing(new TestArgumentsOfClass, 'bar', 'bar'));
 
         TestArgumentsOfClass::macro('bar', function ($arguments) {
             return $arguments;
         });
 
-        $this->assertSame('bar', call_existing(new TestArgumentsOfClass, 'bar', 'bar'));
+        static::assertSame('bar', call_existing(new TestArgumentsOfClass, 'bar', 'bar'));
     }
 
-    public function test_replicate()
+    public function test_has_trait(): void
     {
-        $clone = new class
-        {
-            public function clone()
-            {
-                return $this;
-            }
-        };
-
-        $duplicate = new class
-        {
-            public function duplicate()
-            {
-                return 'foo';
-            }
-
-            public function clone()
-            {
-                return $this;
-            }
-
-        };
-
-        $replicate = new class
-        {
-            public function replicate()
-            {
-                return 'foo';
-            }
-
-            public function duplicate()
-            {
-                return 'foo';
-            }
-
-            public function clone()
-            {
-                return $this;
-            }
-        };
-
-        $none = new class() {
-
-        };
-
-        $this->assertInstanceOf(get_class($clone), replicate($clone));
-        $this->assertInstanceOf(get_class($duplicate), replicate($duplicate));
-        $this->assertInstanceOf(get_class($replicate), replicate($replicate));
-        $this->assertInstanceOf(get_class($none), replicate($none));
+        static::assertTrue(has_trait(TestArgumentsOfClass::class, Macroable::class));
+        static::assertFalse(has_trait(TestArgumentsOfClass::class, 'Invalid'));
     }
 
-    public function test_has_trait()
-    {
-        $this->assertTrue(has_trait(TestArgumentsOfClass::class, Macroable::class));
-        $this->assertFalse(has_trait(TestArgumentsOfClass::class, 'Invalid'));
-    }
-
-    public function test_map_unto()
-    {
-        $class = new class() extends Fluent {
-            public static function make($attributes)
-            {
-                return new static(['quz' => 'qux']);
-            }
-        };
-
-        $collection = map_unto([['foo' => 'bar'], ['quz' => 'qux']], Fluent::class);
-
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertCount(2, $collection);
-
-        $collection = map_unto([['foo' => 'bar'], ['quz' => 'qux']], $class, 'make');
-
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertCount(2, $collection);
-        $this->assertSame('qux', $collection->first()->quz);
-        $this->assertSame('qux', $collection->last()->quz);
-    }
-
-    public function test_methods_of()
+    public function test_methods_of(): void
     {
         $methods = methods_of(TestArgumentsOfClass::class);
 
-        $this->assertInstanceOf(Collection::class, $methods);
-        $this->assertCount(9, $methods);
+        static::assertInstanceOf(Collection::class, $methods);
+        static::assertCount(8, $methods);
 
         $methods = methods_of(new TestArgumentsOfClass);
 
-        $this->assertInstanceOf(Collection::class, $methods);
-        $this->assertCount(9, $methods);
+        static::assertInstanceOf(Collection::class, $methods);
+        static::assertCount(8, $methods);
 
-        $methods = methods_of(TestArgumentsOfClass::class, function ($method) {
+        $methods = methods_of(TestArgumentsOfClass::class, static function ($method): bool {
             return $method->name === 'test';
         });
 
-        $this->assertInstanceOf(Collection::class, $methods);
-        $this->assertCount(1, $methods);
+        static::assertInstanceOf(Collection::class, $methods);
+        static::assertCount(1, $methods);
 
-        $methods = methods_of(TestArgumentsOfClass::class, \ReflectionMethod::IS_PROTECTED);
+        $methods = methods_of(TestArgumentsOfClass::class, ReflectionMethod::IS_PROTECTED);
 
-        $this->assertInstanceOf(Collection::class, $methods);
-        $this->assertCount(1, $methods);
+        static::assertInstanceOf(Collection::class, $methods);
+        static::assertCount(1, $methods);
     }
 
     public function test_missing_trait()
     {
-        $this->assertFalse(missing_trait(TestArgumentsOfClass::class, Macroable::class));
-        $this->assertTrue(missing_trait(TestArgumentsOfClass::class, 'Invalid'));
+        static::assertFalse(missing_trait(TestArgumentsOfClass::class, Macroable::class));
+        static::assertTrue(missing_trait(TestArgumentsOfClass::class, 'Invalid'));
     }
 
-    public function test_properties_of()
+    public function test_properties_of(): void
     {
         $class = new class {
             protected $foo;
             public $bar;
             private $quz;
+            protected $baz;
         };
 
-        $this->assertInstanceOf(Collection::class, properties_of($class));
-        $this->assertCount(3, properties_of($class));
+        static::assertCount(1, properties_of($class));
 
-        $properties = properties_of($class, function ($property) {
+        $properties = properties_of($class, static function ($property): bool {
             return $property->name === 'foo';
         });
 
-        $this->assertInstanceOf(Collection::class, $properties);
-        $this->assertCount(1, $properties);
+        static::assertInstanceOf(Collection::class, $properties);
+        static::assertCount(1, $properties);
 
         $properties = properties_of($class, ReflectionProperty::IS_PROTECTED);
 
-        $this->assertInstanceOf(Collection::class, $properties);
-        $this->assertCount(1, $properties);
+        static::assertInstanceOf(Collection::class, $properties);
+        static::assertCount(2, $properties);
     }
 }
 

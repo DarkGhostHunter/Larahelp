@@ -1,6 +1,6 @@
 {
     "name": "darkghosthunter/larahelp",
-    "description": "Supercharge your Laravel projects with more than 35 useful global helpers.",
+    "description": "Supercharge your Laravel projects with useful global helpers.",
     "keywords": [
         "darkghosthunter",
         "helpers",
@@ -17,28 +17,26 @@
         }
     ],
     "require": {
-        "php": "^7.4||^8.0",
+        "php": "^8.0",
         "ext-json": "*",
-        "illuminate/support": "^7.0||^8.0"
+        "illuminate/support": "^8.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^5.0||^6.0",
-        "guzzlehttp/guzzle": "^6.5||^7.0",
+        "orchestra/testbench": "^6.0",
+        "guzzlehttp/guzzle": "^7.0",
         "phpunit/phpunit": "^9.3",
         "mockery/mockery": "^1.4",
-        "nesbot/carbon": "^2.41"
+        "nesbot/carbon": "^2.41",
+        "moneyphp/money": "^v4.0.2"
     },
     "autoload": {
-        "psr-4": {
-            "DarkGhostHunter\\Larahelp\\": "src"
-        },
         "files": [
-            "src/datetime.php",
-            "src/filesystem.php",
-            "src/helpers.php",
-            "src/http.php",
-            "src/objects.php",
-            "src/services.php"
+            "helpers/auth.php",
+            "helpers/common.php",
+            "helpers/datetime.php",
+            "helpers/filesystem.php",
+            "helpers/http.php",
+            "helpers/objects.php"
         ]
     },
     "autoload-dev": {

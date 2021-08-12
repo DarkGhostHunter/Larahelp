@@ -2,9 +2,11 @@
 
 namespace Tests;
 
-use App\TestClass;
-use Orchestra\Testbench\TestCase;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Orchestra\Testbench\TestCase;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class FilesystemTest extends TestCase
@@ -15,9 +17,9 @@ class FilesystemTest extends TestCase
             $class = app_path('TestClass.php');
             if (! File::exists($class)) {
                 File::replace($class, <<<EOT
-<?php 
+<?php
 
-namespace App; 
+namespace App;
 
 class TestClass
 {
@@ -25,12 +27,12 @@ class TestClass
     {
         // ...
     }
-    
+
     protected function privateFunction(int \$argument, User \$user, string \$optional = null)
     {
-        
+
     }
-} 
+}
 EOT
                 );
             }
@@ -41,30 +43,42 @@ EOT
         parent::setUp();
     }
 
-    public function test_base_path_of()
+    public function test_dot_path(): void
     {
-        $this->assertSame('app' . DS . 'TestClass.php', base_path_of(new TestClass()));
-        $this->assertSame('app' . DS . 'TestClass.php', base_path_of(TestClass::class));
+        static::assertSame('foo.Bar.quz', dot_path('\foo\Bar/quz'));
+        static::assertSame('foo.Bar.quz', dot_path('foo\Bar/quz'));
     }
 
-    public function test_class_defined_at()
+    public function test_files(): void
     {
-        $this->assertSame(base_path('app' . DS . 'TestClass.php') . ':5', class_defined_at(TestClass::class));
-        $this->assertSame(base_path('app' . DS . 'TestClass.php'), class_defined_at(TestClass::class, false));
+        static::assertInstanceOf(Filesystem::class, files());
 
-        $this->assertSame(base_path('app' . DS . 'TestClass.php') . ':5', class_defined_at(new TestClass()));
-        $this->assertSame(base_path('app' . DS . 'TestClass.php'), class_defined_at(new TestClass(), false));
+        $mock = $this->mock('files');
+
+        $mock->shouldReceive('files')
+            ->once()
+            ->with(base_path('foo/bar'))
+            ->andReturn(['foo', 'bar']);
+
+        $mock->shouldReceive('allFiles')
+            ->once()
+            ->with(base_path('baz/qux'))
+            ->andReturn(['baz', 'qux', 'quuz']);
+
+        $files = files('foo/bar');
+
+        static::assertInstanceOf(Collection::class, $files);
+        static::assertCount(2, $files);
+
+        $files = files('baz/qux', true);
+
+        static::assertInstanceOf(Collection::class, $files);
+        static::assertCount(3, $files);
     }
 
-    public function test_dot_path()
+    public function test_undot_path(): void
     {
-        $this->assertSame('foo.Bar.quz', dot_path('\foo\Bar/quz'));
-        $this->assertSame('foo.Bar.quz', dot_path('foo\Bar/quz'));
-    }
-
-    public function test_undot_path()
-    {
-        $this->assertSame('foo' . DS . 'Bar' . DS . 'quz', undot_path('foo.Bar.quz'));
-        $this->assertSame('foo' . DS . 'Bar' . DS . 'quz', undot_path('foo.Bar.quz'));
+        static::assertSame('foo' . DS . 'Bar' . DS . 'quz', undot_path('foo.Bar.quz'));
+        static::assertSame('foo' . DS . 'Bar' . DS . 'quz', undot_path('foo.Bar.quz'));
     }
 }
