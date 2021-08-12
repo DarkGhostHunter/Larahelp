@@ -8,7 +8,7 @@
 
 # Larahelp
 
-Supercharge your Laravel projects with more than 35 useful global helpers.
+Supercharge your Laravel projects with more than 25 useful global helpers.
 
 ## Requisites
 
