@@ -31,16 +31,17 @@ This package includes helpful global helpers for your project make almost anythi
 
 | | | |
 |---|---|---|
-| [app_call](#app_call)             | [in_console](#in_console)         | [route_is](#route_is)
-| [call_existing](#call_existing)   | [in_development](#in_development) | [sleep_between](#sleep_between)
-| [created](#created)               | [logged_in](#logged_in)           | [taptap](#taptap)
-| [delist](#delist)                 | [methods_of](#methods_of)         | [undot_path](#undot_path)
-| [diff](#diff)                     | [missing_trait](#missing_trait)   | [until](#until)
-| [dot_path](#dot_path)             | [none_of](#none_of)               | [user](#user)
-| [enclose](#enclose)               | [ok](#ok)                         | [weekend](#weekend)
-| [files](#files)                   | [period](#period)                 | [weekstart](#weekstart)
-| [has_trait](#has_trait)           | [period_from](#period_from)       | [which_of](#which_of)
-| [hashy](#hashy)                   | [pipe](#pipe)                     | [yesterday](#yesterday)
+| [app_call](#app_call)             | [in_console](#in_console)         | [sleep_between](#sleep_between)
+| [call_existing](#call_existing)   | [in_development](#in_development) | [taptap](#taptap)
+| [created](#created)               | [logged_in](#logged_in)           | [undot_path](#undot_path)
+| [data_update](#data_update)       | [methods_of](#methods_of)         | [until](#until)
+| [delist](#delist)                 | [missing_trait](#missing_trait)   | [user](#user)
+| [diff](#diff)                     | [none_of](#none_of)               | [weekend](#weekend)
+| [dot_path](#dot_path)             | [ok](#ok)                         | [weekstart](#weekstart)
+| [enclose](#enclose)               | [period](#period)                 | [which_of](#which_of)
+| [files](#files)                   | [period_from](#period_from)       | [yesterday](#yesterday)
+| [has_trait](#has_trait)           | [pipe](#pipe)                     | 
+| [hashy](#hashy)                   | [route_is](#route_is)             |
 
 ### `app_call()`
 
@@ -78,6 +79,33 @@ public function store(Request $request): Response
     return created([$post->getKeyName() => $post->getKey()];
 }
 ```
+
+### `data_update()`
+
+Updates an item of an array or object using a callback that receives it.
+
+```php
+$array = [
+    'foo' => [
+        'bar' => null
+    ]
+];
+
+data_update($array, 'foo.bar', function ($value) {
+    if ($value === null) {
+        return 'baz';
+    }
+})
+
+
+// [
+//     'foo' => [
+//         'bar' => 'baz'
+//     ]
+// ];
+```
+
+> The value will be updated regardless if the key doesn't exists.
 
 ### `delist()`
 
