@@ -135,6 +135,38 @@ if (!function_exists('pipe')) {
     }
 }
 
+if (!function_exists('remember')) {
+    /**
+     * Retrieves an item from the cache, or stores a default value if the item doesn't exist.
+     *
+     * @param  string  $key
+     * @param  \Closure|\DateTimeInterface|\DateInterval|int  $ttl
+     * @param  \Closure|\DateTimeInterface|\DateInterval|int|null  $callback
+     * @param  int|null  $lock  If issued, it will lock the key and wait the same amount of seconds.
+     *
+     * @return mixed
+     */
+    function remember(
+        string $key,
+        Closure|DateTimeInterface|DateInterval|int $ttl,
+        Closure|DateTimeInterface|DateInterval|int $callback = null,
+        int $lock = null
+    ): mixed
+    {
+        $cache = app('cache');
+
+        if (is_callable($ttl)) {
+            [$ttl, $callback, $lock] = [null, $ttl, $callback];
+        }
+
+        if ($lock) {
+            return $cache->lock($key, $lock)->block($ttl, static fn() => $cache->remember($key, $ttl, $callback));
+        }
+
+        return $cache->remember($key, $ttl, $callback);
+    }
+}
+
 if (!function_exists('sleep_between')) {
     /**
      * Runs a callback while sleeping between multiple executions.

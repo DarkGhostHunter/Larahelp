@@ -31,17 +31,17 @@ This package includes helpful global helpers for your project make almost anythi
 
 | | | |
 |---|---|---|
-| [app_call](#app_call)             | [in_console](#in_console)         | [sleep_between](#sleep_between)
-| [call_existing](#call_existing)   | [in_development](#in_development) | [taptap](#taptap)
-| [created](#created)               | [logged_in](#logged_in)           | [undot_path](#undot_path)
-| [data_update](#data_update)       | [methods_of](#methods_of)         | [until](#until)
-| [delist](#delist)                 | [missing_trait](#missing_trait)   | [user](#user)
-| [diff](#diff)                     | [none_of](#none_of)               | [weekend](#weekend)
-| [dot_path](#dot_path)             | [ok](#ok)                         | [weekstart](#weekstart)
-| [enclose](#enclose)               | [period](#period)                 | [which_of](#which_of)
-| [files](#files)                   | [period_from](#period_from)       | [yesterday](#yesterday)
-| [has_trait](#has_trait)           | [pipe](#pipe)                     | 
-| [hashy](#hashy)                   | [route_is](#route_is)             |
+| [app_call](#app_call)             | [in_console](#in_console)         | [route_is](#route_is)
+| [call_existing](#call_existing)   | [in_development](#in_development) | [sleep_between](#sleep_between)
+| [created](#created)               | [logged_in](#logged_in)           | [taptap](#taptap)
+| [data_update](#data_update)       | [methods_of](#methods_of)         | [undot_path](#undot_path)
+| [delist](#delist)                 | [missing_trait](#missing_trait)   | [until](#until)
+| [diff](#diff)                     | [none_of](#none_of)               | [user](#user)
+| [dot_path](#dot_path)             | [ok](#ok)                         | [weekend](#weekend)
+| [enclose](#enclose)               | [period](#period)                 | [weekstart](#weekstart)
+| [files](#files)                   | [period_from](#period_from)       | [which_of](#which_of)
+| [has_trait](#has_trait)           | [pipe](#pipe)                     | [yesterday](#yesterday)
+| [hashy](#hashy)                   | [remember](#remember)             |
 
 ### `app_call()`
 
@@ -400,6 +400,34 @@ pipe(10, [
 
 // 15
 ```
+
+### `remember()`
+
+Retrieves an item from the cache, or stores a default value if the item doesn't exist. 
+
+```php
+remember('foo', 60, function() {
+    return 'bar';
+})
+```
+
+If no `ttl` is set, and rather a callback is issued as second parameter, it will be stored forever.
+
+```php
+remember('foo', function () {
+    return 'bar';
+})
+```
+
+It supports atomic locks, which are created using the same name key. It will lock the key by a given seconds, while also waiting for the same amount of time.
+
+```php
+remember('foo', 60, function() {
+    return 'bar';
+}, 20);
+```
+
+This can be useful to avoid cache data-races, where multiple processes run the same callback because the cache key is not filled yet.
 
 ### `route_is()`
 

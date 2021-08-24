@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Closure;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HigherOrderTapProxy;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
@@ -31,6 +32,53 @@ class CommonTest extends TestCase
         });
 
         static::assertNull($array['foo']['quz']['qux']);
+    }
+
+    public function test_remember(): void
+    {
+        $result = remember('foo', static function():string {
+            return 'bar';
+        });
+
+        static::assertSame('bar', $result);
+
+        Cache::forget('foo');
+
+        $result = remember('foo', 10, static function(): string {
+            return 'bar';
+        });
+
+        static::assertSame('bar', $result);
+
+        Cache::put('foo', 'baz');
+
+        $result = remember('foo', 10, static function(): string {
+            return 'bar';
+        });
+
+        static::assertSame('baz', $result);
+
+        Cache::forget('foo');
+        Cache::lock('foo', 2);
+
+        $result = remember('foo', 10, static function (): string {
+            return 'bar';
+        }, 10);
+
+        static::assertSame('bar', $result);
+
+        static::assertFalse(Cache::lock('foo', 2)->release());
+
+        Cache::forget('foo');
+        Cache::lock('foo', 2);
+
+        $result = remember('foo', static function (): string {
+            return 'bar';
+        }, 10);
+
+        static::assertSame('bar', $result);
+
+        static::assertFalse(Cache::lock('foo', 2)->release());
     }
 
     public function test_delist(): void
