@@ -32,16 +32,16 @@ This package includes helpful global helpers for your project make almost anythi
 | | | |
 |---|---|---|
 | [app_call](#app_call)             | [in_console](#in_console)         | [route_is](#route_is)
-| [call_existing](#call_existing)   | [in_development](#in_development) | [sleep_between](#sleep_between)
-| [created](#created)               | [logged_in](#logged_in)           | [taptap](#taptap)
-| [data_update](#data_update)       | [methods_of](#methods_of)         | [undot_path](#undot_path)
-| [delist](#delist)                 | [missing_trait](#missing_trait)   | [until](#until)
-| [diff](#diff)                     | [none_of](#none_of)               | [user](#user)
-| [dot_path](#dot_path)             | [ok](#ok)                         | [weekend](#weekend)
-| [enclose](#enclose)               | [period](#period)                 | [weekstart](#weekstart)
-| [files](#files)                   | [period_from](#period_from)       | [which_of](#which_of)
-| [has_trait](#has_trait)           | [pipe](#pipe)                     | [yesterday](#yesterday)
-| [hashy](#hashy)                   | [remember](#remember)             |
+| [call_existing](#call_existing)   | [in_development](#in_development) | [shadow](#shadow)
+| [created](#created)               | [logged_in](#logged_in)           | [sleep_between](#sleep_between)
+| [data_update](#data_update)       | [methods_of](#methods_of)         | [taptap](#taptap)
+| [delist](#delist)                 | [missing_trait](#missing_trait)   | [undot_path](#undot_path)
+| [diff](#diff)                     | [none_of](#none_of)               | [until](#until)
+| [dot_path](#dot_path)             | [ok](#ok)                         | [user](#user)
+| [enclose](#enclose)               | [period](#period)                 | [weekend](#weekend)
+| [files](#files)                   | [period_from](#period_from)       | [weekstart](#weekstart)
+| [has_trait](#has_trait)           | [pipe](#pipe)                     | [which_of](#which_of)
+| [hashy](#hashy)                   | [remember](#remember)             | [yesterday](#yesterday)
 
 ### `app_call()`
 
@@ -437,6 +437,36 @@ Determine whether the current route's name matches the given patterns.
 if (route_is('dahsboard.*')) {
     return 'You are in the dashboard';
 }
+```
+
+### `shadow()`
+
+Calls the next method only if the given condition is true. It's like `tap()` but conditionally.
+
+```php
+use App\Models\User;
+
+$inDevelopment = app()->environment('production');
+
+$user = Use::find(1)
+
+$user->name = 'John';
+
+return shadow($user, $inDevelopment)->save();
+```
+
+It also accepts a Closure, that will be evaluated before running the target method. The Closure receives the method arguments.
+
+```php
+use App\Models\User;
+
+$user = Use::find(1)
+
+$user->name = 'John';
+
+return shadow($user, function (string $env) {
+    return app()->environment($env) ;
+})->save('development');
 ```
 
 ### `sleep_between()`

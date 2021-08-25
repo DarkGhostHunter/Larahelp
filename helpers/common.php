@@ -195,6 +195,37 @@ if (!function_exists('sleep_between')) {
     }
 }
 
+if (!function_exists('shadow')) {
+    /**
+     * Calls the next method only if the given condition is true.
+     *
+     * @template T
+     *
+     * @param  mixed  $condition
+     * @param  T  $object
+     *
+     * @return T
+     */
+    function shadow(object $object, mixed $condition): object
+    {
+        return new class($object, $condition) {
+            public function __construct(protected object $object, protected mixed $condition)
+            {
+                //
+            }
+
+            public function __call(string $name, array $arguments): object
+            {
+                if (value($this->condition, ...$arguments)) {
+                    $this->object->{$name}(...$arguments);
+                }
+
+                return $this->object;
+            }
+        };
+    }
+}
+
 if (!function_exists('taptap')) {
     /**
      * Call the given Closure with the given value then return the value, twice.
