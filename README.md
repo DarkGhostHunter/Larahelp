@@ -455,7 +455,7 @@ $user->name = 'John';
 return shadow($user, $inDevelopment)->save();
 ```
 
-It also accepts a Closure, that will be evaluated before running the target method. The Closure receives the method arguments.
+It also accepts a Closure, that will be evaluated before running the target method. The Closure receives the object.
 
 ```php
 use App\Models\User;

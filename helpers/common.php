@@ -216,7 +216,7 @@ if (!function_exists('shadow')) {
 
             public function __call(string $name, array $arguments): object
             {
-                if (value($this->condition, ...$arguments)) {
+                if (value($this->condition, $this->object)) {
                     $this->object->{$name}(...$arguments);
                 }
 

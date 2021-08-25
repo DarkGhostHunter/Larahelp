@@ -254,14 +254,14 @@ class CommonTest extends TestCase
             'foo' => 'bar'
         ]);
 
-        shadow($object, static function (string $key, string $value): bool {
-            return $value === 'baz';
+        shadow($object, static function ($object): bool {
+            return $object->foo === 'bar';
         })->offsetSet('foo', 'baz');
 
         static::assertSame('baz', $object->foo);
 
-        shadow($object, static function (string $key, string $value): bool {
-            return $value === 'baz';
+        shadow($object, static function ($object): bool {
+            return $object->foo === 'bar';
         })->offsetSet('foo', 'bar');
 
         static::assertSame('baz', $object->foo);
