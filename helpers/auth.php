@@ -35,7 +35,6 @@ if (!function_exists('logged_in')) {
             throw new RuntimeException("A user [{$auth->user()->getAuthIdentifier()}] was already authenticated");
         }
 
-
         $auth->login($user);
 
         return tap($callback($user), static function () use ($auth): void {
