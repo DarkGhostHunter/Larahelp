@@ -4,7 +4,6 @@ namespace Tests;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Fluent;
 use Illuminate\Support\HigherOrderTapProxy;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
@@ -234,37 +233,6 @@ class CommonTest extends TestCase
         static::assertCount(4, $collection);
         static::assertGreaterThanOrEqual(3, $end - $start);
         static::assertLessThan(5, $end - $start);
-    }
-
-    public function test_shadow(): void
-    {
-        $object = new Fluent([
-            'foo' => 'bar'
-        ]);
-
-        shadow($object, true)->offsetSet('foo', 'quz');
-
-        static::assertSame('quz', $object->foo);
-
-        shadow($object, false)->offsetSet('foo', 'bar');
-
-        static::assertSame('quz', $object->foo);
-
-        $object = new Fluent([
-            'foo' => 'bar'
-        ]);
-
-        shadow($object, static function (string $key, string $value): bool {
-            return $value === 'baz';
-        })->offsetSet('foo', 'baz');
-
-        static::assertSame('baz', $object->foo);
-
-        shadow($object, static function (string $key, string $value): bool {
-            return $value === 'baz';
-        })->offsetSet('foo', 'bar');
-
-        static::assertSame('baz', $object->foo);
     }
 
     public function test_taptap(): void
