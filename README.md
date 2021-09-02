@@ -31,18 +31,18 @@ This package includes helpful global helpers for your project make almost anythi
 
 | | | |
 |---|---|---|
-| [app_call](#app_call)             | [in_console](#in_console)         | [route_is](#route_is)
-| [call_existing](#call_existing)   | [in_development](#in_development) | [sleep_between](#sleep_between)
-| [created](#created)               | [logged_in](#logged_in)           | [taptap](#taptap)
-| [data_update](#data_update)       | [methods_of](#methods_of)         | [undot_path](#undot_path)
-| [delist](#delist)                 | [missing_trait](#missing_trait)   | [until](#until)
-| [diff](#diff)                     | [none_of](#none_of)               | [user](#user)
-| [dot_path](#dot_path)             | [ok](#ok)                         | [weekend](#weekend)
-| [enclose](#enclose)               | [period](#period)                 | [weekstart](#weekstart)
-| [files](#files)                   | [period_from](#period_from)       | [which_of](#which_of)
-| [has_trait](#has_trait)           | [pipe](#pipe)                     | [yesterday](#yesterday)
-| [hashy](#hashy)                   | [remember](#remember)             | 
-
+| [app_call](#app_call)             | [in_development](#in_development) | [route_is](#route_is)
+| [call_existing](#call_existing)   | [logged_in](#logged_in)           | [shadow](#shadow)
+| [created](#created)               | [methods_of](#methods_of)         | [sleep_between](#sleep_between)
+| [data_update](#data_update)       | [missing_trait](#missing_trait)   | [taptap](#taptap)
+| [delist](#delist)                 | [none_of](#none_of)               | [undot_path](#undot_path)
+| [diff](#diff)                     | [object_assign](#object_assign)   | [until](#until)
+| [dot_path](#dot_path)             | [ok](#ok)                         | [user](#user)
+| [enclose](#enclose)               | [period](#period)                 | [weekend](#weekend)
+| [files](#files)                   | [period_from](#period_from)       | [weekstart](#weekstart)
+| [has_trait](#has_trait)           | [pipe](#pipe)                     | [which_of](#which_of)
+| [hashy](#hashy)                   | [remember](#remember)             | [yesterday](#yesterday)
+| [in_console](#in_console)         | [route_is](#route_is)             |
 ### `app_call()`
 
 Executes a callable using the application Container.
@@ -320,6 +320,18 @@ none_of('foo', ['bar', 'baz', 'qux'], fn ($subject, $compared) => $subject === $
 // false
 ```
 
+### `object_assign()`
+
+Assigns an array of values to an object, recursively, using dot notation.
+
+```php
+$object = new stdClass();
+
+object_assign($object, ['foo' => 'bar']);
+
+echo $object->foo; // "bar"
+```
+
 ### `ok()`
 
 Returns an HTTP 204 response (OK, No Content).
@@ -437,6 +449,18 @@ Determine whether the current route's name matches the given patterns.
 if (route_is('dahsboard.*')) {
     return 'You are in the dashboard';
 }
+```
+
+### `shadow()`
+
+Calls a method on an object if it exists, or returns false. It supports Macros.
+
+```php
+if ($rendered = shadow($mayRender, 'render')) {
+    return $rendered;
+}
+
+return response((string)$mayRender);
 ```
 
 ### `sleep_between()`

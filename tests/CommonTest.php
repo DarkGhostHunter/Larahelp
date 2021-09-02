@@ -4,8 +4,10 @@ namespace Tests;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Fluent;
 use Illuminate\Support\HigherOrderTapProxy;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use Orchestra\Testbench\TestCase;
 use Stringable;
 
@@ -124,6 +126,25 @@ class CommonTest extends TestCase
         static::assertSame('bar.quz', $enclose('bar'));
     }
 
+    public function test_hashy(): void
+    {
+        $hashable = 'This is a hashable string';
+        $expected = 'TJYa8+63dRbdN6w44shX1g==';
+
+        static::assertSame($expected, hashy($hashable));
+        static::assertSame($expected, hashy(Str::of($hashable)));
+        static::assertSame($expected, hashy(new class implements Stringable {
+            public function __toString(): string
+            {
+                return 'This is a hashable string';
+            }
+        }));
+
+        static::assertTrue(hashy($hashable, $expected));
+        static::assertFalse(hashy($hashable, $expected . '='));
+        static::assertFalse(hashy($hashable, 'TJYa8+63dRbdN6w44shX1g='));
+    }
+
     public function test_in_console(): void
     {
         static::assertTrue(in_console());
@@ -186,6 +207,24 @@ class CommonTest extends TestCase
         }));
     }
 
+    public function test_object_assign()
+    {
+        $object = new class extends Fluent {};
+
+        $array = ['foo' => 'bar', 'baz' => 'quz'];
+        static::assertSame($object, object_assign($object, $array));
+        static::assertSame('bar', $object->foo);
+
+        $arrayable = new class(['baz' => 'cougar', 'qux' => 'quuz']) extends Fluent {};
+        static::assertSame($object, object_assign($object, $arrayable));
+        static::assertSame('cougar', $object->baz);
+        static::assertSame('quuz', $object->qux);
+
+        $array = ['qux' => 'quux'];
+        static::assertSame($object, object_assign($object, $array, false));
+        static::assertSame('quuz', $object->qux);
+    }
+
     public function test_pipe(): void
     {
         $barToQuz = new class {
@@ -222,17 +261,27 @@ class CommonTest extends TestCase
         static::assertSame('qux', $pipe);
     }
 
-    public function test_while_sleep(): void
+    public function test_shadow(): void
     {
-        $start = time();
-        $collection = sleep_between(4, 1000, static function (): string {
-            return microtime(false);
-        });
-        $end = time();
+        $object = new class {
+            public function foo($string) {
+                return $string;
+            }
+        };
 
-        static::assertCount(4, $collection);
-        static::assertGreaterThanOrEqual(3, $end - $start);
-        static::assertLessThan(5, $end - $start);
+        static::assertSame('bar', shadow($object, 'foo', 'bar'));
+        static::assertFalse(shadow($object, 'bar', 'bar'));
+
+        $object = new class {
+            use Macroable;
+        };
+
+        $object::macro('bar', function ($string) {
+            return $string;
+        });
+
+        static::assertSame('foo', shadow($object, 'bar', 'foo'));
+        static::assertFalse(shadow($object, 'foo', 'bar'));
     }
 
     public function test_taptap(): void
@@ -254,25 +303,6 @@ class CommonTest extends TestCase
         });
 
         static::assertTrue($object->called);
-    }
-
-    public function test_hashy(): void
-    {
-        $hashable = 'This is a hashable string';
-        $expected = 'TJYa8+63dRbdN6w44shX1g==';
-
-        static::assertSame($expected, hashy($hashable));
-        static::assertSame($expected, hashy(Str::of($hashable)));
-        static::assertSame($expected, hashy(new class implements Stringable {
-            public function __toString(): string
-            {
-                return 'This is a hashable string';
-            }
-        }));
-
-        static::assertTrue(hashy($hashable, $expected));
-        static::assertFalse(hashy($hashable, $expected . '='));
-        static::assertFalse(hashy($hashable, 'TJYa8+63dRbdN6w44shX1g='));
     }
 
     public function test_which_of(): void
@@ -299,5 +329,18 @@ class CommonTest extends TestCase
                 return 'cougar';
             }
         }));
+    }
+
+    public function test_while_sleep(): void
+    {
+        $start = time();
+        $collection = sleep_between(4, 1000, static function (): string {
+            return microtime(false);
+        });
+        $end = time();
+
+        static::assertCount(4, $collection);
+        static::assertGreaterThanOrEqual(3, $end - $start);
+        static::assertLessThan(5, $end - $start);
     }
 }
