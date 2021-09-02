@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Stringable as LaravelStringable;
@@ -59,6 +60,23 @@ if (!function_exists('enclose')) {
     }
 }
 
+if (!function_exists('hashy')) {
+    /**
+     * Creates a small BASE64 encoded MD5 hash from a string for portable checksum.
+     *
+     * @param  \Stringable|\Illuminate\Support\Stringable|string  $hashable
+     * @param  string|null  $hash  The hash to compare the result.
+     *
+     * @return string|bool  Returns a boolean if a comparable hash has been set to compare.
+     */
+    function hashy(Stringable|LaravelStringable|string $hashable, string $hash = null): string|bool
+    {
+        $hashed = base64_encode(md5((string)$hashable, true));
+
+        return $hash ? hash_equals($hash, $hashed) : $hashed;
+    }
+}
+
 if (!function_exists('in_console')) {
     /**
      * Check if the application is running in console.
@@ -115,6 +133,30 @@ if (!function_exists('none_of')) {
     }
 }
 
+if (!function_exists('object_assign')) {
+    /**
+     * Assigns an array of values to an object, recursively, using dot notation.
+     *
+     * @param  object  $object
+     * @param  \Illuminate\Contracts\Support\Arrayable|iterable  $data
+     * @param  bool  $overwrite
+     *
+     * @return object
+     */
+    function object_assign(object $object, Arrayable|iterable $data, bool $overwrite = true): object
+    {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        }
+
+        foreach ($data as $name => $value) {
+            data_set($object, $name, $value, $overwrite);
+        }
+
+        return $object;
+    }
+}
+
 if (!function_exists('pipe')) {
     /**
      * Sends an object through a pipeline.
@@ -167,6 +209,26 @@ if (!function_exists('remember')) {
     }
 }
 
+if (!function_exists('shadow')) {
+    /**
+     * Calls a method on an object if it exists, or returns false.
+     *
+     * @param  object  $object
+     * @param  string  $method
+     * @param  mixed  ...$arguments
+     *
+     * @return mixed
+     */
+    function shadow(object $object, string $method, mixed ...$arguments): mixed
+    {
+        if (method_exists($object, $method) || method_exists($object, 'hasMacro') && $object::hasMacro($method)) {
+            return $object->{$method}(...$arguments);
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('sleep_between')) {
     /**
      * Runs a callback while sleeping between multiple executions.
@@ -206,23 +268,6 @@ if (!function_exists('taptap')) {
     function taptap(mixed $value, callable $callback = null): mixed
     {
         return tap(tap($value, $callback));
-    }
-}
-
-if (!function_exists('hashy')) {
-    /**
-     * Creates a small BASE64 encoded MD5 hash from a string for portable checksum.
-     *
-     * @param  \Stringable|\Illuminate\Support\Stringable|string  $hashable
-     * @param  string|null  $hash  The hash to compare the result.
-     *
-     * @return string|bool  Returns a boolean if a comparable hash has been set to compare.
-     */
-    function hashy(Stringable|LaravelStringable|string $hashable, string $hash = null): string|bool
-    {
-        $hashed = base64_encode(md5((string)$hashable, true));
-
-        return $hash ? hash_equals($hash, $hashed) : $hashed;
     }
 }
 

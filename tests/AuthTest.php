@@ -17,6 +17,14 @@ class AuthTest extends TestCase
 
         static::assertSame($user, user());
 
+        config()->set('auth.guards', [
+            'api' => [
+                'driver' => 'token',
+                'provider' => 'users',
+                'hash' => false,
+            ],
+        ]);
+
         $this->actingAs($user, 'api');
 
         static::assertSame($user, user('api'));
@@ -44,6 +52,14 @@ class AuthTest extends TestCase
             $table->id();
             $table->rememberToken();
         });
+
+        config()->set('auth.guards', [
+            'api' => [
+                'driver' => 'token',
+                'provider' => 'users',
+                'hash' => false,
+            ],
+        ]);
 
         $call = logged_in($user, static function ($authenticatable) use (&$executed, $user): void {
             static::assertSame($user, $authenticatable);
