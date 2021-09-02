@@ -17,6 +17,14 @@ class AuthTest extends TestCase
 
         static::assertSame($user, user());
 
+        config()->set('auth.guards', [
+            'api' => [
+                'driver' => 'token',
+                'provider' => 'users',
+                'hash' => false,
+            ],
+        ]);
+
         $this->actingAs($user, 'api');
 
         static::assertSame($user, user('api'));
